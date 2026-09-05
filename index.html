@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1f5c36">
+<title>Diario di Caccia</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#eef1ec;
+  color:#172018;
+}
+
+header{
+  background:#1f5c36;
+  color:white;
+  padding:18px 15px;
+  text-align:center;
+  box-shadow:0 2px 8px #0003;
+}
+
+.logo{
+  font-size:45px;
+  line-height:1;
+}
+
+header h1{
+  margin:7px 0 2px;
+  font-size:27px;
+}
+
+header p{
+  margin:0;
+  opacity:.85;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:15px;
+}
+
+.card{
+  background:white;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:15px;
+  box-shadow:0 2px 10px #0002;
+}
+
+h2{
+  margin-top:0;
+  color:#1f5c36;
+}
+
+label{
+  display:block;
+  font-weight:bold;
+  margin:13px 0 6px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid #c8cec8;
+  border-radius:10px;
+  font-size:16px;
+  background:white;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+button{
+  border:0;
+  border-radius:11px;
+  padding:13px 16px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.btn{
+  width:100%;
+  background:#1f5c36;
+  color:white;
+  margin-top:15px;
+}
+
+.btn-secondary{
+  background:#e4ebe5;
+  color:#1f5c36;
+  margin-top:8px;
+  width:100%;
+}
+
+.btn-danger{
+  background:#b83232;
+  color:white;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.abbattimento{
+  background:#f5f7f4;
+  border-radius:12px;
+  padding:12px;
+  margin-top:10px;
+  border-left:5px solid #1f5c36;
+}
+
+.abbattimento strong{
+  color:#1f5c36;
+}
+
+.photo-preview{
+  width:100%;
+  max-height:300px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-top:10px;
+  display:none;
+}
+
+.gps{
+  background:#edf5ee;
+  padding:12px;
+  border-radius:10px;
+  margin-top:8px;
+  font-size:14px;
+}
+
+.entry{
+  border:1px solid #d5dbd5;
+  border-radius:14px;
+  padding:15px;
+  margin-bottom:12px;
+}
+
+.entry img{
+  width:100%;
+  max-height:250px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.small{
+  font-size:13px;
+  color:#687168;
+}
+
+.empty{
+  text-align:center;
+  color:#687168;
+  padding:20px;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+
+@media(max-width:480px){
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🐕‍🦺🕊️</div>
+  <h1>Diario di Caccia</h1>
+  <p>Le tue uscite, i tuoi abbattimenti</p>
+</header>
+
+<div class="container">
+
+<!-- NUOVA USCITA -->
+<div class="card">
+  <h2>📝 Nuova uscita</h2>
+
+  <label>Data</label>
+  <input type="date" id="data">
+
+  <label>Zona / località</label>
+  <input type="text" id="zona" placeholder="Es. Ladispoli, Cerveteri...">
+
+  <label>Tipo di caccia</label>
+  <select id="tipoCaccia">
+    <option value="Appostamento">Appostamento</option>
+    <option value="Vagante">Vagante</option>
+    <option value="Selezione">Selezione</option>
+    <option value="Beccaccia">Beccaccia</option>
+    <option value="Colombaccio">Colombaccio</option>
+    <option value="Tordi">Tordi</option>
+    <option value="Quaglie">Quaglie</option>
+    <option value="Fagiano">Fagiano</option>
+    <option value="Altro">Altro</option>
+  </select>
+
+  <label>Note sull'uscita</label>
+  <textarea id="noteUscita" placeholder="Meteo, terreno, comportamento del cane..."></textarea>
+
+  <button class="btn-secondary" onclick="prendiGPS()">
+    📍 Rileva posizione GPS
+  </button>
+
+  <div class="gps" id="gpsBox">
+    Posizione non ancora rilevata
+  </div>
+</div>
+
+
+<!-- ABBATTIMENTI -->
+<div class="card">
+  <h2>🦌 Abbattimenti</h2>
+
+  <label>Specie</label>
+  <select id="specie">
+    <option value="Tordo bottaccio">Tordo bottaccio</option>
+    <option value="Tordo sassello">Tordo sassello</option>
+    <option value="Cesena">Cesena</option>
+    <option value="Merlo">Merlo</option>
+    <option value="Colombaccio">Colombaccio</option>
+    <option value="Tortora">Tortora</option>
+    <option value="Quaglia">Quaglia</option>
+    <option value="Fagiano">Fagiano</option>
+    <option value="Beccaccia">Beccaccia</option>
+    <option value="Lepre">Lepre</option>
+    <option value="Coniglio selvatico">Coniglio selvatico</option>
+    <option value="Cinghiale">Cinghiale</option>
+    <option value="Volpe">Volpe</option>
+    <option value="Altro">Altro</option>
+  </select>
+
+  <div class="grid">
+    <div>
+      <label>Quantità</label>
+      <input type="number" id="quantita" min="1" value="1">
+    </div>
+
+    <div>
+      <label>Peso (kg)</label>
+      <input type="number" id="peso" min="0" step="0.1" placeholder="Facoltativo">
+    </div>
+  </div>
+
+  <label>Sesso</label>
+  <select id="sesso">
+    <option value="">Non specificato</option>
+    <option value="Maschio">Maschio</option>
+    <option value="Femmina">Femmina</option>
+  </select>
+
+  <label>Note</label>
+  <input type="text" id="noteAbb" placeholder="Es. abbattuto al volo">
+
+  <label>📸 Foto</label>
+  <input type="file" id="foto" accept="image/*" capture="environment">
+
+  <img id="preview" class="photo-preview">
+
+  <button class="btn" onclick="aggiungiAbbattimento()">
+    ➕ Aggiungi abbattimento
+  </button>
+
+  <div id="listaAbbattimenti"></div>
+</div>
+
+
+<!-- SAL
