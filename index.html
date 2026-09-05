@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1f5c36">
+<title>Diario di Caccia</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#eef2ed;
+  color:#222;
+}
+
+header{
+  background:#1f5c36;
+  color:white;
+  padding:18px 15px;
+  text-align:center;
+}
+
+header h1{
+  margin:0;
+  font-size:25px;
+}
+
+header p{
+  margin:6px 0 0;
+  font-size:13px;
+  opacity:.9;
+}
+
+.container{
+  max-width:650px;
+  margin:auto;
+  padding:15px;
+}
+
+.card{
+  background:white;
+  border-radius:15px;
+  padding:16px;
+  margin-bottom:15px;
+  box-shadow:0 2px 8px #0002;
+}
+
+h2{
+  margin-top:0;
+  color:#1f5c36;
+  font-size:20px;
+}
+
+label{
+  display:block;
+  font-weight:bold;
+  margin:12px 0 6px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:9px;
+  font-size:16px;
+  background:white;
+}
+
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:10px;
+  padding:13px;
+  margin-top:10px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.primary{
+  background:#1f5c36;
+  color:white;
+}
+
+.secondary{
+  background:#dce8df;
+  color:#1f5c36;
+}
+
+.danger{
+  background:#c62828;
+  color:white;
+}
+
+.gps{
+  background:#315f9b;
+  color:white;
+}
+
+.preview{
+  width:100%;
+  max-height:300px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-top:10px;
+  display:none;
+}
+
+.gps-box{
+  background:#f1f5f2;
+  border-radius:10px;
+  padding:12px;
+  margin-top:10px;
+  font-size:14px;
+}
+
+.entry{
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:12px;
+  margin-top:12px;
+  background:#fafafa;
+}
+
+.entry img{
+  width:100%;
+  max-height:220px;
+  object-fit:cover;
+  border-radius:9px;
+  margin-top:8px;
+}
+
+.entry-title{
+  font-size:18px;
+  font-weight:bold;
+  color:#1f5c36;
+}
+
+.small{
+  font-size:13px;
+  color:#666;
+  margin-top:5px;
+}
+
+.badge{
+  display:inline-block;
+  background:#1f5c36;
+  color:white;
+  padding:4px 8px;
+  border-radius:20px;
+  font-size:12px;
+  margin:3px 2px 0 0;
+}
+
+.empty{
+  text-align:center;
+  color:#777;
+  padding:20px 5px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:15px;
+}
+
+.stat{
+  background:white;
+  border-radius:12px;
+  padding:12px 5px;
+  text-align:center;
+  box-shadow:0 2px 6px #0001;
+}
+
+.stat strong{
+  display:block;
+  font-size:23px;
+  color:#1f5c36;
+}
+
+.stat span{
+  font-size:11px;
+  color:#666;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🦌 Diario di Caccia</h1>
+  <p>Il tuo diario digitale delle uscite di caccia</p>
+</header>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat">
+      <strong id="totale">0</strong>
+      <span>Abbattimenti</span>
+    </div>
+    <div class="stat">
+      <strong id="uscite">0</strong>
+      <span>Uscite</span>
+    </div>
+    <div class="stat">
+      <strong id="specie">0</strong>
+      <span>Specie</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>➕ Nuovo abbattimento</h2>
+
+    <label for="data">Data</label>
+    <input type="date" id="data">
+
+    <label for="animale">Selvatico</label>
+    <select id="animale">
+      <option value="">Seleziona il selvatico</option>
+      <option>Tordo bottaccio</option>
+      <option>Tordo sassello</option>
+      <option>Cesena</option>
+      <option>Merlo</option>
+      <option>Colombaccio</option>
+      <option>Colombella</option>
+      <option>Quaglia</option>
+      <option>Beccaccia</option>
+      <option>Fagiano</option>
+      <option>Starna</option>
+      <option>Lepre</option>
+      <option>Coniglio selvatico</option>
+      <option>Volpe</option>
+      <option>Cinghiale</option>
+      <option>Capriolo</option>
+      <option>Daino</option>
+      <option>Cervo</option>
+      <option>Muflone</option>
+      <option>Altro</option>
+    </select>
+
+    <label for="quantita">Numero abbattuti</label>
+    <input type="number" id="quantita" min="1" value="1">
+
+    <label for="peso">Peso (kg) – opzionale</label>
+    <input type="number" id="peso" min="0" step="0.1" placeholder="Es. 85">
+
+    <label for="zona">Zona / località</label>
+    <input type="text" id="zona" placeholder="Es. bosco, appostamento...">
+
+    <label for="note">Note</label>
+    <textarea id="note" placeholder="Arma, munizioni, comportamento del cane, recupero..."></textarea>
+
+    <label for="foto">Foto</label>
+    <input type="file" id="foto" accept="image/*" capture="environment">
+    <img id="anteprima" class="preview">
+
+    <button class="gps" onclick="prendiGPS()">
+      📍 Rileva posizione GPS
+    </button>
+
+    <div class="gps-box" id="gpsBox">
+      Posizione non rilevata
+    </div>
+
+    <button class="primary" onclick="salvaAbbattimento()">
+      💾 SALVA ABBATTIMENTO
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📖 Il mio diario</h2>
+
+    <button class="secondary" onclick="mostraTutti()">
+      🔄 Mostra tutti
+    </button>
+
+    <button class="secondary" onclick="esportaDiario()">
+      📤 Esporta diario
+    </button>
+
+    <div id="lista"></div>
+  </div>
+
+</div>
+
+<script>
+
+let abbattimenti = JSON.parse(localStorage.getItem("diarioCaccia")) || [];
+
+let posizione = {
+  lat:null,
+  lon:null
+};
+
+const dataInput = document.getElementById("data");
+
+const oggi = new Date();
+dataInput.value =
+  oggi.getFullYear() + "-" +
+  String(oggi.getMonth()+1).padStart(2,"0") + "-" +
+  String(oggi.getDate()).padStart(2,"0");
+
+document.getElementById("foto").addEventListener("change", function(){
+
+  const file = this.files[0];
+
+  if(!file){
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+    const img = document.getElementById("anteprima");
+    img.src = e.target.result;
+    img.style.display = "block";
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
+function prendiGPS(){
+
+  const box = document.getElementById("gpsBox");
+
+  if(!navigator.geolocation){
+    box.innerHTML = "❌ Il dispositivo non supporta il GPS.";
+    return;
+  }
+
+  box.innerHTML = "📡 Ricerca della posizione in corso...";
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(pos){
+
+      posizione.lat = pos.coords.latitude;
+      posizione.lon = pos.coords.longitude;
+
+      box.innerHTML =
+        "✅ Posizione rilevata<br><br>" +
+        "Latitudine: " + posizione.lat.toFixed(6) +
+        "<br>" +
+        "Longitudine: " + posizione.lon.toFixed(6);
+
+    },
+
+    function(error){
+
+      let messaggio = "❌ Impossibile rilevare la posizione.";
+
+      if(error.code === 1){
+        messaggio =
+          "❌ Permesso GPS negato.<br>" +
+          "Consenti la posizione al browser.";
+      }
+
+      if(error.code === 2){
+        messaggio = "❌ Posizione non disponibile.";
+      }
+
+      if(error.code === 3){
+        messaggio = "❌ Timeout nella ricerca GPS.";
+      }
+
+      box.innerHTML = messaggio;
+    },
+
+    {
+      enableHighAccuracy:true,
+      timeout:20000,
+      maximumAge:0
+    }
+  );
+}
+
+
+function salvaAbbattimento(){
+
+  const data = document.getElementById("data").value;
+  const animale = document.getElementById("animale").value;
+  const quantita = parseInt(document.getElementById("quantita").value) || 1;
+  const peso = document.getElementById("peso").value;
+  const zona = document.getElementById("zona").value;
+  const note = document.getElementById("note").value;
+
+  if(!data){
+    alert("Inserisci la data.");
+    return;
+  }
+
+  if(!animale){
+    alert("Seleziona il selvatico.");
+    return;
+  }
+
+  const fotoInput = document.getElementById("foto");
+
+  function completaSalvataggio(foto){
+
+    const nuovo = {
+      id:Date.now(),
+      data:data,
+      animale:animale,
+      quantita:quantita,
+      peso:peso,
+      zona:zona,
+      note:note,
+      foto:foto || "",
+      lat:posizione.lat,
+      lon:posizione.lon
+    };
+
+    abbattimenti.unshift(nuovo);
+
+    localStorage.setItem(
+      "diarioCaccia",
+      JSON.stringify(abbattimenti)
+    );
+
+    pulisciModulo();
+    aggiornaStatistiche();
+    mostraTutti();
+
+    alert("✅ Abbattimento salvato!");
+  }
+
+  if(fotoInput.files[0]){
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+      completaSalvataggio(e.target.result);
+    };
+
+    reader.readAsDataURL(fotoInput.files[0]);
+
+  }else{
+    completaSalvataggio("");
+  }
+}
+
+
+function pulisciModulo(){
+
+  document.getElementById("animale").value = "";
+  document.getElementById("quantita").value = 1;
+  document.getElementById("peso").value = "";
+  document.getElementById("zona").value = "";
+  document.getElementById("note").value = "";
+  document.getElementById("foto").value = "";
+
+  const img = document.getElementById("anteprima");
+  img.src = "";
+  img.style.display = "none";
+
+  posizione = {
+    lat:null,
+    lon:null
+  };
+
+  document.getElementById("gpsBox").innerHTML =
+    "Posizione non rilevata";
+}
+
+
+function mostraTutti(){
+
+  const lista = document.getElementById("lista");
+
+  if(abbattimenti.length === 0){
+
+    lista.innerHTML =
+      '<div class="empty">📖 Il diario è ancora vuoto.</div>';
+
+    return;
+  }
+
+  lista.innerHTML = "";
+
+  abbattimenti.forEach(function(a){
+
+    const div = document.createElement("div");
+    div.className = "entry";
+
+    let gps = "";
+
+    if(a.lat !== null && a.lon !== null){
+
+      const link =
+        "https://www.google.com/maps/search/?api=1&query=" +
+        a.lat + "," + a.lon;
+
+      gps =
+        '<a href="' + link +
+        '" target="_blank">' +
+        '📍 Apri posizione su Google Maps</a>';
+    }
+
+    let foto = "";
+
+    if(a.foto){
+      foto = '<img src="' + a.foto + '">';
+    }
+
+    let peso = "";
+
+    if(a.peso){
+      peso = "<br>⚖️ Peso: " + a.peso + " kg";
+    }
+
+    div.innerHTML =
+      '<div class="entry-title">' +
+      a.animale +
+      '</div>' +
+
+      '<div class="small">📅 ' +
+      formattaData(a.data) +
+      '</div>' +
+
+      '<div>' +
+      '<span class="badge">Abbattuti: ' +
+      a.quantita +
+      '</span>' +
+      '</div>' +
+
+      (a.zona ?
+      '<div>🌲 Zona: ' +
+      escapeHtml(a.zona) +
+      '</div>' : '') +
+
+      peso +
+
+      (a.note ?
+      '<div>📝 ' +
+      escapeHtml(a.note) +
+      '</div>' : '') +
+
+      (gps ?
+      '<div style="margin-top:8px">' +
+      gps +
+      '</div>' : '') +
+
+      foto +
+
+      '<button class="danger" onclick="elimina(' +
+      a.id +
+      ')">🗑️ Elimina</button>';
+
+    lista.appendChild(div);
+  });
+}
+
+
+function elimina(id){
+
+  if(!confirm("Vuoi eliminare questo abbattimento?")){
+    return;
+  }
+
+  abbattimenti =
+    abbattimenti.filter(function(a){
+      return a.id !== id;
+    });
+
+  localStorage.setItem(
+    "diarioCaccia",
+    JSON.stringify(abbattimenti)
+  );
+
+  aggiornaStatistiche();
+  mostraTutti();
+}
+
+
+function aggiornaStatistiche(){
+
+  let totale = 0;
+
+  abbattimenti.forEach(function(a){
+    totale += Number(a.quantita) || 0;
+  });
+
+  const date = new Set(
+    abbattimenti.map(function(a){
+      return a.data;
+    })
+  );
+
+  const specie = new Set(
+    abbattimenti.map(function(a){
+      return a.animale;
+    })
+  );
+
+  document.getElementById("totale").textContent = totale;
+  document.getElementById("uscite").textContent = date.size;
+  document.getElementById("specie").textContent = specie.size;
+}
+
+
+function formattaData(data){
+
+  const parti = data.split("-");
+
+  if(parti.length !== 3){
+    return data;
+  }
+
+  return parti[2] + "/" +
+         parti[1] + "/" +
+         parti[0];
+}
+
+
+function escapeHtml(testo){
+
+  return String(testo)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function esportaDiario(){
+
+  if(abbattimenti.length === 0){
+    alert("Il diario è vuoto.");
+    return;
+  }
+
+  let testo =
+    "DIARIO DI CACCIA\n\n";
+
+  abbattimenti.forEach(function(a){
+
+    testo +=
+      "Data: " + formattaData(a.data) + "\n" +
+      "Selvatico: " + a.animale + "\n" +
+      "Numero: " + a.quantita + "\n";
+
+    if(a.peso){
+      testo += "Peso: " + a.peso + " kg\n";
+    }
+
+    if(a.zona){
+      testo += "Zona: " + a.zona + "\n";
+    }
+
+    if(a.lat !== null && a.lon !== null){
+      testo +=
+        "GPS: " +
+        a.lat + ", " +
+        a.lon + "\n";
+    }
+
+    if(a.note){
+      testo += "Note: " + a.note + "\n";
+    }
+
+    testo +=
+      "\n--------------------\n\n";
+  });
+
+  const blob = new Blob(
+    [testo],
+    {type:"text/plain"}
+  );
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "diario-di-caccia.txt";
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+
+aggiornaStatistiche();
+mostraTutti();
+
+</script>
+
+</body>
+</html>
